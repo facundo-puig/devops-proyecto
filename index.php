@@ -36,4 +36,6 @@ try {
     echo "<h2>Error de conexión a la base de datos:</h2>";
     echo "<pre>" . $e->getMessage() . "</pre>";
 }
+
+// prueba deploy
 ?>
