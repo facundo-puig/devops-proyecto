@@ -3,35 +3,19 @@ name: Deploy por Git Pull
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup SSH key (formato correcto)
+      - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          # Escribir EXACTAMENTE la privada del Secret (sin romper saltos de línea)
-          printf "%s\n" "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          # Corta si el secreto está vacío o mal pegado
-          test -s ~/.ssh/id_ed25519 || { echo "ERROR: SSH_KEY vacío o mal formateado"; exit 1; }
-
-      - name: Mostrar fingerprint de la privada del Secret (debug)
-        run: |
-          echo "Fingerprint privada (Secret SSH_KEY):"
-          ssh-keygen -lf ~/.ssh/id_ed25519
-
-      - name: Agregar host a known_hosts
-        run: |
           ssh-keyscan -H 137.184.127.11 >> ~/.ssh/known_hosts
 
-      - name: Ejecutar git pull en el servidor (verbose)
+      - name: Deploy (sync con main)
         run: |
-          ssh -i ~/.ssh/id_ed25519 \
-              -o IdentitiesOnly=yes \
-              -o StrictHostKeyChecking=yes \
-              -v alumno@137.184.127.11 \
-              "cd ~/lemp-sites/facundo_puig && git pull origin main"
-              # Cambio para test
+          ssh -i ~/.ssh/id_ed25519 alumno@137.184.127.11 \
+            "cd ~/lemp-sites/facundo_puig && git fetch origin main && git reset --hard origin/main"
