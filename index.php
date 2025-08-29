@@ -11,7 +11,6 @@ jobs:
       - name: Setup SSH key (formato correcto)
         run: |
           mkdir -p ~/.ssh
-          # Escribir la privada EXACTA del secreto (sin romper saltos de línea)
           printf "%s\n" "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
@@ -31,3 +30,4 @@ jobs:
               -o StrictHostKeyChecking=yes \
               -v alumno@137.184.127.11 \
               "cd ~/lemp-sites/facundo_puig && git pull origin main"
+
