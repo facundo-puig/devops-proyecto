@@ -34,3 +34,4 @@ jobs:
               -o StrictHostKeyChecking=yes \
               -v alumno@137.184.127.11 \
               "cd ~/lemp-sites/facundo_puig && git pull origin main"
+              # Cambio para test
