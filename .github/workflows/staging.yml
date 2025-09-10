@@ -1,0 +1,25 @@
+name: CD - Deploy Staging (develop)
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Deploy via SSH (git pull develop)
+        run: |
+          ssh -o StrictHostKeyChecking=no alumno@137.184.127.11 \
+            "cd ~/lemp-sites/facundo_puig/staging && git checkout develop && git pull origin develop"
